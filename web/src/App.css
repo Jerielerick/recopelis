@@ -171,3 +171,11 @@
   font-weight: 700;
   text-decoration: none;
 }
+.auth-form__error {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.25);
+  border-radius: var(--border-radius);
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+}
