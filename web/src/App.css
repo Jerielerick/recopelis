@@ -132,3 +132,42 @@
 .ui-input input:focus {
   border-color: var(--color-primary);
 }
+.auth-page {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.auth-page .ui-card {
+  width: 100%;
+  max-width: 440px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.auth-form h1 {
+  font-size: 2rem;
+}
+
+.auth-form__description {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-top: 0.5rem;
+}
+
+.auth-form__footer {
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.auth-form__footer a {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
