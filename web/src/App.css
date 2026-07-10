@@ -179,3 +179,14 @@
   padding: 0.8rem 1rem;
   font-size: 0.95rem;
 }
+.main-header__logout {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.main-header__logout:hover {
+  color: var(--color-text);
+}
