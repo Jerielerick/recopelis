@@ -190,3 +190,57 @@
 .main-header__logout:hover {
   color: var(--color-text);
 }
+.onboarding-page {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.onboarding-page .ui-card {
+  width: 100%;
+  max-width: 720px;
+}
+
+.onboarding-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.onboarding-content h1 {
+  font-size: 2.4rem;
+}
+
+.onboarding-content h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.option-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.option-chip {
+  background: #111111;
+  color: var(--color-text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.option-chip:hover {
+  color: var(--color-text);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.option-chip--active {
+  background: var(--color-primary);
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
