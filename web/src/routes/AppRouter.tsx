@@ -6,12 +6,14 @@ import ProfilePage from "../features/profile/pages/ProfilePage";
 import SettingsPage from "../features/settings/pages/SettingsPage";
 import { MainLayout } from "../layouts/MainLayout";
 import { ProtectedRoute } from "./ProtectedRoute";
+import OnboardingPage from "../features/onboarding/pages/OnboardingPage";
 
 export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
+        <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
