@@ -1,12 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Card } from "../../../components/ui";
+import { useAuth } from "../../auth";
+import { saveOnboarding } from "../../../services/userService";
 
 const genres = ["Acción", "Comedia", "Terror", "Romance", "Animación", "Drama"];
 const platforms = ["Netflix", "Prime Video", "Disney+", "Max", "Apple TV+", "YouTube"];
 
 export default function OnboardingPage() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   function toggleItem(
     item: string,
@@ -17,6 +25,36 @@ export default function OnboardingPage() {
         ? currentItems.filter((currentItem) => currentItem !== item)
         : [...currentItems, item]
     );
+  }
+
+  async function handleContinue() {
+    setError("");
+
+    if (!user) {
+      setError("Necesitas iniciar sesión para guardar tus preferencias.");
+      return;
+    }
+
+    if (selectedGenres.length === 0 || selectedPlatforms.length === 0) {
+      setError("Selecciona al menos un género y una plataforma.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      await saveOnboarding({
+        uid: user.uid,
+        genres: selectedGenres,
+        platforms: selectedPlatforms,
+      });
+
+      navigate("/");
+    } catch {
+      setError("No se pudieron guardar tus preferencias. Intenta nuevamente.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -44,6 +82,7 @@ export default function OnboardingPage() {
                       : "option-chip"
                   }
                   onClick={() => toggleItem(genre, setSelectedGenres)}
+                  disabled={isLoading}
                 >
                   {genre}
                 </button>
@@ -64,6 +103,7 @@ export default function OnboardingPage() {
                       : "option-chip"
                   }
                   onClick={() => toggleItem(platform, setSelectedPlatforms)}
+                  disabled={isLoading}
                 >
                   {platform}
                 </button>
@@ -71,7 +111,11 @@ export default function OnboardingPage() {
             </div>
           </section>
 
-          <Button>Continuar</Button>
+          {error && <p className="auth-form__error">{error}</p>}
+
+          <Button onClick={handleContinue} disabled={isLoading}>
+            {isLoading ? "Guardando..." : "Continuar"}
+          </Button>
         </div>
       </Card>
     </main>
