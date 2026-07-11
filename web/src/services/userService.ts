@@ -6,6 +6,12 @@ type CreateUserProfileParams = {
   email: string | null;
 };
 
+type SaveOnboardingParams = {
+  uid: string;
+  genres: string[];
+  platforms: string[];
+};
+
 export async function createUserProfile({
   uid,
   email,
@@ -17,4 +23,21 @@ export async function createUserProfile({
     genres: [],
     platforms: [],
   });
+}
+
+export async function saveOnboarding({
+  uid,
+  genres,
+  platforms,
+}: SaveOnboardingParams) {
+  await setDoc(
+    doc(db, "users", uid),
+    {
+      genres,
+      platforms,
+      onboardingCompleted: true,
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
 }
