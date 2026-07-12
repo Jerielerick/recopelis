@@ -300,3 +300,36 @@
   color: var(--color-text-secondary);
   line-height: 1.5;
 }
+.player-page {
+  min-height: calc(100vh - 72px);
+  padding: 3rem 2rem;
+}
+
+.player-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.player-screen {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000000;
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+}
+
+.player-container .ui-card h1 {
+  margin-bottom: 0.6rem;
+}
+
+.player-container .ui-card p {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
