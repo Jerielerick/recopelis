@@ -13,6 +13,12 @@ type SaveOnboardingParams = {
   platforms: string[];
 };
 
+type SaveM3uProfileParams = {
+  uid: string;
+  name: string;
+  url: string;
+};
+
 export async function createUserProfile({
   uid,
   email,
@@ -56,4 +62,18 @@ export async function getUserProfile(uid: string) {
     genres: string[];
     platforms: string[];
   };
+}
+
+export async function saveM3uProfile({
+  uid,
+  name,
+  url,
+}: SaveM3uProfileParams) {
+  await setDoc(doc(db, "users", uid, "m3uProfiles", name), {
+    name,
+    url,
+    type: "m3u",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
 }
