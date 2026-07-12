@@ -20,6 +20,7 @@ export function MainLayout() {
 
         <nav className="main-header__nav">
           <Link to="/">Inicio</Link>
+          <Link to="/catalog">Catálogo</Link>
 
           {isAuthenticated ? (
             <>
