@@ -29,7 +29,7 @@ export default function RegisterPage() {
     try {
       setIsLoading(true);
       await registerUser(email, password);
-      navigate("/");
+navigate("/onboarding");
     } catch {
       setError("No se pudo crear la cuenta. Revisa los datos e intenta nuevamente.");
     } finally {
