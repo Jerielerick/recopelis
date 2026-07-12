@@ -7,6 +7,7 @@ import SettingsPage from "../features/settings/pages/SettingsPage";
 import { MainLayout } from "../layouts/MainLayout";
 import { ProtectedRoute } from "./ProtectedRoute";
 import OnboardingPage from "../features/onboarding/pages/OnboardingPage";
+import CatalogPage from "../features/catalog/pages/CatalogPage";
 
 export function AppRouter() {
   return (
@@ -17,6 +18,7 @@ export function AppRouter() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<ProfilePage />} />
