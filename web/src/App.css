@@ -250,3 +250,22 @@
   flex-direction: column;
   gap: 1rem;
 }
+.catalog-preview {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  text-align: left;
+}
+
+.catalog-preview h3 {
+  font-size: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.catalog-preview p {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
