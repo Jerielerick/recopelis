@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Card, Input } from "../../../components/ui";
 import { loginUser } from "../../../services/authService";
+import { getUserProfile } from "../../../services/userService";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -22,8 +23,15 @@ export default function LoginPage() {
 
     try {
       setIsLoading(true);
-      await loginUser(email, password);
-      navigate("/");
+     const user = await loginUser(email, password);
+const profile = await getUserProfile(user.uid);
+
+if (!profile?.onboardingCompleted) {
+  navigate("/onboarding");
+  return;
+}
+
+navigate("/");
     } catch {
       setError("Correo o contraseña incorrectos.");
     } finally {

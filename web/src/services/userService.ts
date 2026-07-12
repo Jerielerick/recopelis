@@ -1,4 +1,5 @@
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { getDoc } from "firebase/firestore";
 import { db } from "../config";
 
 type CreateUserProfileParams = {
@@ -40,4 +41,19 @@ export async function saveOnboarding({
     },
     { merge: true }
   );
+}
+
+export async function getUserProfile(uid: string) {
+  const snapshot = await getDoc(doc(db, "users", uid));
+
+  if (!snapshot.exists()) {
+    return null;
+  }
+
+  return snapshot.data() as {
+    email: string | null;
+    onboardingCompleted: boolean;
+    genres: string[];
+    platforms: string[];
+  };
 }
