@@ -1,6 +1,7 @@
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import { db } from "../config";
+import { parseXtreamFromPlaylistUrl } from "./xtreamService";
 
 type CreateUserProfileParams = {
   uid: string;
@@ -69,10 +70,15 @@ export async function saveM3uProfile({
   name,
   url,
 }: SaveM3uProfileParams) {
+  const xtreamCredentials = parseXtreamFromPlaylistUrl(url);
+
   await setDoc(doc(db, "users", uid, "m3uProfiles", name), {
     name,
     url,
-    type: "m3u",
+    type: xtreamCredentials ? "xtream" : "m3u",
+    host: xtreamCredentials?.host || null,
+    username: xtreamCredentials?.username || null,
+    password: xtreamCredentials?.password || null,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
