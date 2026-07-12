@@ -333,3 +333,20 @@
   color: var(--color-text-secondary);
   line-height: 1.6;
 }
+.web-player {
+  width: 100%;
+}
+
+.web-player__video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000000;
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.web-player__status {
+  margin-top: 0.8rem;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+}
