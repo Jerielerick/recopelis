@@ -8,7 +8,7 @@ import { MainLayout } from "../layouts/MainLayout";
 import { ProtectedRoute } from "./ProtectedRoute";
 import OnboardingPage from "../features/onboarding/pages/OnboardingPage";
 import CatalogPage from "../features/catalog/pages/CatalogPage";
-
+import PlayerPage from "../features/player/pages/PlayerPage";
 export function AppRouter() {
   return (
     <BrowserRouter>
@@ -23,6 +23,7 @@ export function AppRouter() {
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/player" element={<PlayerPage />} />
           </Route>
         </Route>
       </Routes>
