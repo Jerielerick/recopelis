@@ -66,3 +66,18 @@ export function parseM3u(content: string): M3uItem[] {
 
   return items;
 }
+export async function loadM3u(url: string) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`M3U error ${response.status}`);
+  }
+
+  const content = await response.text();
+
+  if (!content.includes("#EXTM3U") && !content.includes("#EXTINF")) {
+    throw new Error("M3U empty or invalid content");
+  }
+
+  return parseM3u(content);
+}
