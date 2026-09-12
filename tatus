@@ -1,0 +1,93 @@
+[1mdiff --git a/web/src/App.css b/web/src/App.css[m
+[1mindex 0bd250f..9b738c3 100644[m
+[1m--- a/web/src/App.css[m
+[1m+++ b/web/src/App.css[m
+[36m@@ -7,8 +7,9 @@[m
+ }[m
+ [m
+ .hero {[m
+[31m-  max-width: 700px;[m
+[31m-  text-align: center;[m
+[32m+[m[32m  width: 100%;[m
+[32m+[m[32m  max-width: 1200px;[m
+[32m+[m[32m  text-align: left;[m
+ }[m
+ [m
+ .hero__label {[m
+[36m@@ -21,8 +22,11 @@[m
+ }[m
+ [m
+ .hero h1 {[m
+[31m-  font-size: 3rem;[m
+[31m-  margin-bottom: 1rem;[m
+[32m+[m[32m  max-width: 750px;[m
+[32m+[m[32m  font-size: clamp(2.5rem, 6vw, 5rem);[m
+[32m+[m[32m  line-height: 1;[m
+[32m+[m[32m  letter-spacing: -0.4em;[m
+[32m+[m[32m  margin-bottom: 1.5rem;[m
+ }[m
+ [m
+ .hero__description {[m
+[1mdiff --git a/web/src/features/home/pages/HomePage.css b/web/src/features/home/pages/HomePage.css[m
+[1mindex 7190467..0e7e72f 100644[m
+[1m--- a/web/src/features/home/pages/HomePage.css[m
+[1m+++ b/web/src/features/home/pages/HomePage.css[m
+[36m@@ -112,7 +112,9 @@[m
+   border-radius: 24px;[m
+   border-color: rgba(255, 255, 255, 0.11);[m
+   background: linear-gradient(145deg, rgba(36, 36, 39, 0.98), rgba(20, 20, 22, 0.98));[m
+[31m-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.38);[m
+[32m+[m[32m  box-shadow:[m
+[32m+[m[32m  0 30px 80px rgba(0, 0, 0, 0.45),[m
+[32m+[m[32m  0 0 40px rgba(229, 9, 20, 0.08);[m
+ }[m
+ [m
+ .home-list-card {[m
+[36m@@ -175,10 +177,13 @@[m
+ }[m
+ [m
+ .home-list-card__actions .ui-button:last-child {[m
+[31m-  background: rgba(255, 255, 255, 0.08);[m
+[32m+[m[32m   background: rgba(255, 255, 255, 0.08);[m
+   border: 1px solid rgba(255, 255, 255, 0.1);[m
+ }[m
+[31m-[m
+[32m+[m[32m.home-list-card__actions .ui-button:last-child:hover:not(:disabled) {[m
+[32m+[m[32m  transform: translateY(-2px);[m
+[32m+[m[32m  box-shadow: 0 10px 30px rgba(229, 9, 20, 0.25);[m
+[32m+[m[32m}[m
+ .home-discover {[m
+   max-width: 1280px;[m
+   margin: 0 auto;[m
+[36m@@ -221,7 +226,7 @@[m
+ }[m
+ [m
+ .home-media-card:hover {[m
+[31m-  transform: translateY(-4px);[m
+[32m+[m[32m  transform: translateY(-6px) scale(1.02);[m
+   border-color: rgba(255, 255, 255, 0.18);[m
+   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3);[m
+ }[m
+[1mdiff --git a/web/src/index.css b/web/src/index.css[m
+[1mindex e38ab06..f304a57 100644[m
+[1m--- a/web/src/index.css[m
+[1m+++ b/web/src/index.css[m
+[36m@@ -27,6 +27,16 @@[m [mbody,[m
+ #root {[m
+   width: 100%;[m
+   min-height: 100vh;[m
+[31m-  background: var(--color-background);[m
+[32m+[m[32m  background:[m
+[32m+[m[32m    radial-gradient([m
+[32m+[m[32m      circle at 15% 20%,[m
+[32m+[m[32m      rgba(229, 9, 20, 0.14),[m
+[32m+[m[32m      transparent 35%[m
+[32m+[m[32m    ),[m
+[32m+[m[32m    linear-gradient([m
+[32m+[m[32m      180deg,[m
+[32m+[m[32m      #141414 0%,[m
+[32m+[m[32m      #0b0b0b 100%[m
+[32m+[m[32m    );[m
+   color: var(--color-text);[m
+ }[m
+\ No newline at end of file[m
