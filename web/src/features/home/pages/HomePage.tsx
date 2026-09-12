@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import "../../../App.css";
 import "./HomePage.css";
@@ -29,7 +29,7 @@ function HomePage() {
   // Guarda la URL que escribe el usuario
   const [m3uUrl, setM3uUrl] = useState("");
 
-  // Mensajes para mostrar éxito o error
+  // Guarda mensajes para mostrar éxito o error
   const [message, setMessage] = useState("");
 
   // Indica si estamos guardando la lista
@@ -38,18 +38,31 @@ function HomePage() {
   // Indica si estamos cargando el catálogo
   const [isLoadingCatalog, setIsLoadingCatalog] = useState(false);
 
-  // Guarda todos los elementos obtenidos de la M3U
+  // Guarda todos los elementos obtenidos de la lista M3U
   const [catalogItems, setCatalogItems] = useState<M3uItem[]>([]);
 
-  // Guarda el canal que seleccionó el usuario
+  // Guarda el canal actualmente seleccionado
   const [selectedItem, setSelectedItem] = useState<M3uItem | null>(null);
 
-  // Guarda lo que el usuario escriba en el buscador
+  // Guarda el texto que escribe el usuario en el buscador
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Guarda la categoría seleccionada
   const [selectedGroup, setSelectedGroup] = useState("Todos");
 
   // =========================
-  // 3. GUARDAR LISTA
+  // 3. REFERENCIA DEL REPRODUCTOR
+  // =========================
+
+  // playerRef nos permite tener acceso directo
+  // al <div> donde se encuentra el reproductor.
+  //
+  // Al inicio vale null porque el reproductor
+  // todavía no existe en pantalla.
+  const playerRef = useRef<HTMLDivElement | null>(null);
+
+  // =========================
+  // 4. GUARDAR LISTA
   // =========================
 
   async function handleSaveList() {
@@ -61,7 +74,7 @@ function HomePage() {
       return;
     }
 
-    // Validamos que haya una URL
+    // Validamos que exista una URL
     if (!m3uUrl.trim()) {
       setMessage("Ingresa una URL de lista M3U o Xtream.");
       return;
@@ -81,13 +94,14 @@ function HomePage() {
     } catch {
       setMessage("No se pudo guardar la lista. Intenta nuevamente.");
     } finally {
-      // Pase lo que pase, quitamos el estado de guardando
+      // Pase lo que pase,
+      // terminamos el estado de guardado
       setIsSaving(false);
     }
   }
 
   // =========================
-  // 4. CARGAR CATÁLOGO
+  // 5. CARGAR CATÁLOGO
   // =========================
 
   async function handleLoadCatalog() {
@@ -96,9 +110,10 @@ function HomePage() {
     // Limpiamos el catálogo anterior
     setCatalogItems([]);
 
-    // También podemos limpiar el canal seleccionado
+    // Quitamos cualquier canal seleccionado anteriormente
     setSelectedItem(null);
 
+    // Validamos que exista una URL
     if (!m3uUrl.trim()) {
       setMessage("Ingresa una URL M3U para cargar el catálogo.");
       return;
@@ -107,10 +122,10 @@ function HomePage() {
     try {
       setIsLoadingCatalog(true);
 
-      // Quitamos espacios de la URL
+      // Quitamos espacios al inicio y al final
       const url = m3uUrl.trim();
 
-      // Revisamos si la URL parece ser formato Xtream
+      // Revisamos si la URL parece ser de tipo Xtream
       const xtreamCredentials = parseXtreamFromPlaylistUrl(url);
 
       if (xtreamCredentials) {
@@ -123,7 +138,8 @@ function HomePage() {
         return;
       }
 
-      // Si no es Xtream, intentamos cargarla como M3U
+      // Si no es Xtream,
+      // intentamos cargarla como una lista M3U normal
       const items = await loadM3u(url);
 
       // Guardamos TODOS los elementos encontrados
@@ -140,49 +156,103 @@ function HomePage() {
       );
     } finally {
       // Muy importante:
-      // regresamos isLoadingCatalog a false
+      // terminamos el estado de carga
       setIsLoadingCatalog(false);
     }
   }
 
   // =========================
-  // 5. FILTRAR EL CATÁLOGO
+  // 6. SELECCIONAR UN CANAL
+  // =========================
+
+  function handleSelectItem(item: M3uItem) {
+    // Primero guardamos el canal seleccionado.
+    //
+    // Esto hace que React vuelva a renderizar
+    // el componente HomePage.
+    setSelectedItem(item);
+
+    // Esperamos un instante para darle tiempo
+    // a React de crear el reproductor en pantalla.
+    setTimeout(() => {
+      // playerRef.current representa el <div>
+      // que contiene nuestro reproductor.
+      //
+      // El ?. significa:
+      // "si playerRef.current existe, entonces ejecuta esto".
+      playerRef.current?.scrollIntoView({
+        // Movimiento suave
+        behavior: "smooth",
+
+        // Intenta colocar el reproductor
+        // al inicio de la ventana
+        block: "start",
+      });
+    }, 0);
+  }
+
+  // =========================
+  // 7. OBTENER CATEGORÍAS
+  // =========================
+
+  // Aquí obtenemos todas las categorías
+  // que existen dentro del catálogo.
+  //
+  // Algunas listas pueden traer algo como:
+  //
+  // "Sports;General;Entertainment"
+  //
+  // Por eso usamos split(";")
+  // para convertirlas en categorías individuales.
+  const groups = [
+    "Todos",
+    ...Array.from(
+      new Set(
+        catalogItems
+          .flatMap((item) => item.group?.split(";") || [])
+          .map((group) => group.trim())
+          .filter((group) => group.length > 0)
+      )
+    ),
+  ];
+
+  // =========================
+  // 8. FILTRAR CATÁLOGO
   // =========================
 
   // filteredItems NO necesita useState.
   //
-  // Se calcula automáticamente usando:
-  // catalogItems + searchTerm
+  // Se calcula automáticamente cada vez que:
   //
-  // Si searchTerm está vacío, aparecen todos.
-  // Si escribes "espn", solo aparecen títulos que contengan "espn".
- const groups = [
-  "Todos",
-  ...Array.from(
-    new Set(
-      catalogItems
-        .flatMap((item) => item.group?.split(";") || [])
-        .map((group) => group.trim())
-        .filter((group) => group.length > 0)
-    )
-  ),
-];
+  // - cambia catalogItems
+  // - cambia searchTerm
+  // - cambia selectedGroup
   const filteredItems = catalogItems.filter((item) => {
-  const matchesSearch = item.title
-    .toLowerCase()
-    .includes(searchTerm.toLowerCase());
+    // Revisamos si el título coincide
+    // con lo que escribió el usuario
+    const matchesSearch = item.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
 
-  const matchesGroup =
-    selectedGroup === "Todos" ||
-    item.group
-      ?.split(";")
-      .map((group) => group.trim())
-      .includes(selectedGroup);
+    // Revisamos si el canal pertenece
+    // a la categoría seleccionada.
+    //
+    // Si selectedGroup es "Todos",
+    // entonces dejamos pasar cualquier canal.
+    const matchesGroup =
+      selectedGroup === "Todos" ||
+      item.group
+        ?.split(";")
+        .map((group) => group.trim())
+        .includes(selectedGroup);
 
-  return matchesSearch && matchesGroup;
-});
+    // El canal solo aparece si cumple
+    // ambas condiciones.
+    return matchesSearch && matchesGroup;
+  });
+
   // =========================
-  // 6. INTERFAZ
+  // 9. INTERFAZ
   // =========================
 
   return (
@@ -210,7 +280,10 @@ function HomePage() {
             limpia y personal.
           </p>
 
-          {/* Estado de la sesión */}
+          {/* ========================= */}
+          {/* ESTADO DE LA SESIÓN */}
+          {/* ========================= */}
+
           <div className="home-session-card">
             <span
               className={`home-session-card__dot ${
@@ -273,7 +346,7 @@ function HomePage() {
                   onChange={setM3uUrl}
                 />
 
-                {/* Mostramos mensajes */}
+                {/* Mensajes de éxito o error */}
                 {message && (
                   <p className="home-list-card__message">
                     {message}
@@ -315,8 +388,38 @@ function HomePage() {
         {/* ========================= */}
 
         {selectedItem && (
-          <div>
-            <h3>{selectedItem.title}</h3>
+          <div
+            // Aquí conectamos playerRef
+            // con el elemento real del HTML
+            ref={playerRef}
+            className="home-player-panel"
+          >
+            <div className="home-player-panel__header">
+              <div>
+                <span className="home-player-panel__eyebrow">
+                  Reproduciendo ahora
+                </span>
+
+                <h3>{selectedItem.title}</h3>
+
+                <p>
+                  {selectedItem.group || "Sin categoría"}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className="home-player-panel__close"
+
+                // Al cerrar ponemos selectedItem en null.
+                //
+                // Como selectedItem deja de existir,
+                // React deja de mostrar este bloque.
+                onClick={() => setSelectedItem(null)}
+              >
+                Cerrar
+              </button>
+            </div>
 
             <WebPlayer url={selectedItem.url} />
           </div>
@@ -353,25 +456,35 @@ function HomePage() {
             value={searchTerm}
             onChange={setSearchTerm}
           />
-
-          
         )}
-        <div className="home-group-filters">
-  {groups.map((group) => (
-    <button
-  key={group}
-  type="button"
-  className={
-    selectedGroup === group
-      ? "home-group-filter is-active"
-      : "home-group-filter"
-  }
-  onClick={() => setSelectedGroup(group)}
->
-  {group}
-</button>
-  ))}
-</div>
+
+        {/* ========================= */}
+        {/* FILTROS DE CATEGORÍA */}
+        {/* ========================= */}
+
+        {catalogItems.length > 0 && (
+          <div className="home-group-filters">
+            {groups.map((group) => (
+              <button
+                key={group}
+                type="button"
+
+                // Si esta categoría está seleccionada,
+                // agregamos la clase is-active
+                className={
+                  selectedGroup === group
+                    ? "home-group-filter is-active"
+                    : "home-group-filter"
+                }
+
+                // Cambiamos la categoría seleccionada
+                onClick={() => setSelectedGroup(group)}
+              >
+                {group}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* ========================= */}
         {/* RESULTADOS */}
@@ -383,12 +496,24 @@ function HomePage() {
               <div className="home-catalog-grid">
                 {filteredItems.map((item) => (
                   <article
-                    className="home-media-card"
+                    // Si este canal es el seleccionado,
+                    // agregamos la clase is-selected
+                    className={
+                      selectedItem?.id === item.id
+                        ? "home-media-card is-selected"
+                        : "home-media-card"
+                    }
+
                     key={item.id}
 
-                    // Al hacer clic guardamos este canal
-                    // dentro de selectedItem
-                    onClick={() => setSelectedItem(item)}
+                    // Antes hacíamos:
+                    //
+                    // setSelectedItem(item)
+                    //
+                    // Ahora usamos handleSelectItem
+                    // porque además de seleccionar el canal,
+                    // hace scroll automático al reproductor.
+                    onClick={() => handleSelectItem(item)}
                   >
                     <div className="home-media-card__poster">
                       {item.logo ? (
@@ -419,8 +544,8 @@ function HomePage() {
                 ))}
               </div>
             ) : (
-              // Esto aparece cuando sí hay catálogo,
-              // pero el buscador no encuentra coincidencias.
+              // Esto aparece cuando sí existe catálogo,
+              // pero ningún elemento coincide con los filtros
               <div className="home-empty-state">
                 <span className="home-empty-state__icon">
                   🔎
@@ -436,7 +561,7 @@ function HomePage() {
             )}
           </>
         ) : (
-          // Esto aparece antes de cargar una lista.
+          // Esto aparece antes de cargar una lista
           <div className="home-empty-state">
             <span className="home-empty-state__icon">
               ▶
