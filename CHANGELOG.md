@@ -43,7 +43,7 @@ feat: nueva funcionalidad
 fix: corrección de error
 refactor: reorganización sin cambiar comportamiento
 style: cambios visuales
- test: pruebas
+test: pruebas
 docs: documentación
 ci: automatización y pipelines
 chore: mantenimiento
