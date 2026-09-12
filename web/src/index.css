@@ -27,6 +27,16 @@ body,
 #root {
   width: 100%;
   min-height: 100vh;
-  background: var(--color-background);
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(229, 9, 20, 0.14),
+      transparent 35%
+    ),
+    linear-gradient(
+      180deg,
+      #141414 0%,
+      #0b0b0b 100%
+    );
   color: var(--color-text);
 }

@@ -112,7 +112,9 @@
   border-radius: 24px;
   border-color: rgba(255, 255, 255, 0.11);
   background: linear-gradient(145deg, rgba(36, 36, 39, 0.98), rgba(20, 20, 22, 0.98));
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.38);
+  box-shadow:
+  0 30px 80px rgba(0, 0, 0, 0.45),
+  0 0 40px rgba(229, 9, 20, 0.08);
 }
 
 .home-list-card {
@@ -175,10 +177,13 @@
 }
 
 .home-list-card__actions .ui-button:last-child {
-  background: rgba(255, 255, 255, 0.08);
+   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
+.home-list-card__actions .ui-button:last-child:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(229, 9, 20, 0.25);
+}
 .home-discover {
   max-width: 1280px;
   margin: 0 auto;
@@ -221,7 +226,7 @@
 }
 
 .home-media-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px) scale(1.02);
   border-color: rgba(255, 255, 255, 0.18);
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3);
 }
