@@ -294,6 +294,16 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* Canal que actualmente está seleccionado */
+.home-media-card.is-selected {
+  border-color: rgba(255, 255, 255, 0.65);
+  transform: translateY(-4px);
+}
+
+/* Hace más evidente cuál tarjeta está activa */
+.home-media-card.is-selected .home-media-card__poster {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+}
 
 .home-empty-state {
   min-height: 280px;
@@ -429,4 +439,58 @@
 .home-group-filter.is-active {
   background: rgba(255, 255, 255, 0.18);
   border-color: rgba(255, 255, 255, 0.35);
+}
+/* Panel principal del reproductor */
+.home-player-panel {
+  margin-bottom: 32px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Cabecera del reproductor */
+.home-player-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Texto pequeño de contexto */
+.home-player-panel__eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+}
+
+/* Título del canal */
+.home-player-panel__header h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+/* Categoría */
+.home-player-panel__header p {
+  margin: 6px 0 0;
+  opacity: 0.7;
+}
+
+/* Botón para cerrar */
+.home-player-panel__close {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* Hover del botón */
+.home-player-panel__close:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
