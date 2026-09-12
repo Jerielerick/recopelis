@@ -75,6 +75,8 @@ export async function loadM3u(url: string) {
 
   const content = await response.text();
 
+  console.error("Respuesta recibida del servidor:", content.slice(0, 500));
+
   if (!content.includes("#EXTM3U") && !content.includes("#EXTINF")) {
     throw new Error("M3U empty or invalid content");
   }

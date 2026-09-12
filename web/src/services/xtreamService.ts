@@ -40,3 +40,26 @@ export function buildXtreamApiUrl(credentials: XtreamCredentials) {
 
   return apiUrl.toString();
 }
+
+export async function testXtreamConnection(
+  credentials: XtreamCredentials
+) {
+  const response = await fetch(
+    "http://localhost:3000/api/xtream/test",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Recopelis API error ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  return result.data;
+}

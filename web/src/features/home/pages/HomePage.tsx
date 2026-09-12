@@ -5,7 +5,9 @@ import { Button, Card, Input } from "../../../components/ui";
 import { loadM3u, type M3uItem } from "../../../services/m3uService";
 import { saveM3uProfile } from "../../../services/userService";
 import { useAuth } from "../../auth";
-
+import {parseXtreamFromPlaylistUrl,testXtreamConnection,
+} from "../../../services/xtreamService";
+import { WebPlayer } from "../../player/components/WebPlayer";
 function HomePage() {
   const { user, isLoading, isAuthenticated } = useAuth();
 
@@ -14,6 +16,7 @@ function HomePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoadingCatalog, setIsLoadingCatalog] = useState(false);
   const [catalogItems, setCatalogItems] = useState<M3uItem[]>([]);
+  const [selectedItem, setSelectedItem] = useState<M3uItem | null>(null);
 
   async function handleSaveList() {
     setMessage("");
@@ -57,15 +60,28 @@ function HomePage() {
     try {
       setIsLoadingCatalog(true);
 
-      const items = await loadM3u(m3uUrl.trim());
+     const url = m3uUrl.trim();
 
-      setCatalogItems(items.slice(0, 12));
-      setMessage(`Catálogo cargado: ${items.length} elementos encontrados.`);
-    } catch {
-      setMessage("No se pudo cargar la lista M3U. Revisa la URL o permisos CORS.");
-    } finally {
-      setIsLoadingCatalog(false);
-    }
+const xtreamCredentials = parseXtreamFromPlaylistUrl(url);
+
+if (xtreamCredentials) {
+  const data = await testXtreamConnection(xtreamCredentials);
+
+  console.log("Respuesta Xtream:", data);
+
+  setMessage("Conexión Xtream correcta. Revisa la consola.");
+  return;
+}
+
+const items = await loadM3u(url);
+
+setCatalogItems(items);
+setMessage(`Catálogo cargado: ${items.length} elementos encontrados.`);
+    } catch (error) {
+  console.error("Error al cargar M3U:", error);
+
+  setMessage("No se pudo cargar la lista M3U. Revisa la consola.");
+}
   }
 
   return (
@@ -146,6 +162,13 @@ function HomePage() {
 
       <section className="home-discover">
         <div className="home-section-heading">
+        {selectedItem && (
+  <div>
+    <h3>{selectedItem.title}</h3>
+
+    <WebPlayer url={selectedItem.url} />
+  </div>
+)}
           <div>
             <span className="home-section-heading__eyebrow">Vista previa</span>
             <h2>Tu contenido empieza aquí</h2>
@@ -160,7 +183,11 @@ function HomePage() {
         {catalogItems.length > 0 ? (
           <div className="home-catalog-grid">
             {catalogItems.map((item) => (
-              <article className="home-media-card" key={item.id}>
+              <article
+  className="home-media-card"
+  key={item.id}
+  onClick={() => setSelectedItem(item)}
+>
                 <div className="home-media-card__poster">
                   {item.logo ? (
                     <img src={item.logo} alt="" loading="lazy" />
