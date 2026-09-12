@@ -10,77 +10,53 @@ Este documento marca el rumbo técnico del proyecto y propone una secuencia de e
 - Carga de listas M3U desde URL.
 - Parser de elementos `#EXTINF`.
 - Visualización del catálogo completo.
-- Selección de canales desde tarjetas.
+- Búsqueda del catálogo por nombre.
+- Categorías dinámicas a partir de `group-title`, incluyendo grupos múltiples separados por `;`.
+- Filtrado combinado por búsqueda y categoría.
+- Conteo de resultados visibles y estado vacío cuando no existen coincidencias.
+- Selección visual de canales desde tarjetas.
+- Panel del reproductor con título y categoría del contenido seleccionado.
+- Botón para cerrar el reproductor.
+- Scroll automático y suave hacia el reproductor al seleccionar contenido.
 - Reproducción HLS mediante `hls.js`.
+- Corrección de la estructura de autenticación separando `AuthContext`, `AuthProvider` y `useAuth`.
 - Integración inicial con Firebase para perfiles de listas.
 - Detección inicial de URLs Xtream.
 - Backend Express con endpoint de salud.
 - Pruebas server-to-server para proveedores IPTV/Xtream.
 - Diagnóstico de respuestas HTML/XUI.one en proveedores no compatibles con endpoints estándar.
 
-## Próximos pushes propuestos
+## Entregas completadas
 
-### 1. `feat: add catalog search`
+### 1. `feat: add catalog search` — COMPLETADO
 
-Objetivo: permitir encontrar canales rápidamente dentro de listas grandes.
-
-Incluye:
-
-- Campo de búsqueda.
-- Filtrado por nombre.
-- Conteo de resultados visibles.
-- Estado vacío cuando no existen coincidencias.
-
-Rama sugerida:
+Rama integrada:
 
 ```text
 feature/catalog-search
 ```
 
----
-
-### 2. `feat: add catalog categories and filters`
-
-Objetivo: organizar el contenido por `group-title` y tipo.
-
-Incluye:
-
-- Categorías dinámicas.
-- Filtro por grupo.
-- Filtro por tipo: live, movie, series.
-- Botón para limpiar filtros.
-
-Rama sugerida:
-
-```text
-feature/catalog-filters
-```
+Incluyó búsqueda por nombre, categorías dinámicas, filtrado por grupo, conteo de resultados y estado vacío. Las categorías y filtros previstos originalmente como una segunda entrega se incorporaron en esta misma rama.
 
 ---
 
-### 3. `feat: improve media player experience`
+### 2. `feat: improve media player experience` — COMPLETADO
 
-Objetivo: convertir el reproductor actual en una experiencia más completa.
-
-Incluye:
-
-- Resaltar la tarjeta seleccionada.
-- Mostrar título y categoría del contenido reproducido.
-- Mejorar estados de carga y error.
-- Cambio limpio entre streams.
-- Manejo de reproducción fallida.
-
-Rama sugerida:
+Rama integrada:
 
 ```text
 feature/player-improvements
 ```
 
+Incluyó selección visual del canal activo, panel con título y categoría, botón para cerrar el reproductor y scroll automático hacia el reproductor al seleccionar contenido. Durante esta entrega también se corrigió la resolución del módulo `AuthProvider` en un commit independiente.
+
 ---
 
-### 4. `refactor: move M3U loading to backend`
+## Próximos pushes propuestos
 
-Objetivo: evitar depender del CORS del proveedor desde el navegador.
+### 3. `refactor: move M3U loading to backend` — SIGUIENTE
+
+Objetivo: evitar depender del CORS del proveedor desde el navegador y consolidar la arquitectura frontend → API propia → proveedor IPTV.
 
 Incluye:
 
@@ -100,7 +76,7 @@ refactor/backend-m3u
 
 ---
 
-### 5. `feat: normalize IPTV source detection`
+### 4. `feat: normalize IPTV source detection`
 
 Objetivo: manejar diferentes formatos de entrada sin acoplar Recopelis a un proveedor específico.
 
@@ -120,7 +96,7 @@ feature/source-detection
 
 ---
 
-### 6. `feat: add standard Xtream integration`
+### 5. `feat: add standard Xtream integration`
 
 Objetivo: soportar servidores que implementen correctamente la API Xtream estándar.
 
@@ -143,7 +119,7 @@ feature/xtream-api
 
 ---
 
-### 7. `refactor: secure IPTV credentials`
+### 6. `refactor: secure IPTV credentials`
 
 Objetivo: evitar que credenciales sensibles permanezcan expuestas en frontend o documentos accesibles desde el cliente.
 
@@ -163,7 +139,7 @@ refactor/secure-credentials
 
 ---
 
-### 8. `feat: add saved libraries and favorites`
+### 7. `feat: add saved libraries and favorites`
 
 Objetivo: mejorar la experiencia personalizada del usuario autenticado.
 
@@ -182,7 +158,7 @@ feature/user-library
 
 ---
 
-### 9. `test: add frontend and backend tests`
+### 8. `test: add frontend and backend tests`
 
 Objetivo: aumentar la calidad y confianza del proyecto.
 
@@ -201,7 +177,7 @@ test/core-services
 
 ---
 
-### 10. `ci: add quality pipeline`
+### 9. `ci: add quality pipeline`
 
 Objetivo: automatizar validaciones antes de integrar código.
 
@@ -221,7 +197,7 @@ ci/quality-pipeline
 
 ---
 
-### 11. `docs: polish portfolio documentation`
+### 10. `docs: polish portfolio documentation`
 
 Objetivo: dejar el repositorio listo para entrevistas y revisión técnica.
 
@@ -241,20 +217,17 @@ Rama sugerida:
 docs/portfolio-polish
 ```
 
-## Orden recomendado
+## Orden recomendado desde el estado actual
 
 ```text
-1. Búsqueda
-2. Categorías y filtros
-3. Mejoras del reproductor
-4. M3U mediante backend
-5. Normalización de fuentes
-6. Xtream estándar
-7. Seguridad de credenciales
-8. Biblioteca y favoritos
-9. Tests
-10. CI
-11. Documentación final
+1. M3U mediante backend       ← siguiente sesión
+2. Normalización de fuentes
+3. Xtream estándar
+4. Seguridad de credenciales
+5. Biblioteca y favoritos
+6. Tests
+7. CI
+8. Documentación final
 ```
 
 ## Criterio para integrar a `main`
@@ -263,9 +236,9 @@ Una funcionalidad debería llegar a `main` cuando:
 
 - Compila correctamente.
 - No rompe el flujo existente.
-- Fue probada manualmente.
+- Fue probada manualmente en el navegador cuando aplica.
 - No contiene credenciales o datos sensibles.
-- Tiene un commit claro.
+- Tiene commits claros y separados por responsabilidad.
 - Su rama está actualizada con `main` si es necesario.
 - El Pull Request describe qué cambió y cómo probarlo.
 
